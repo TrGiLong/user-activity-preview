@@ -5,7 +5,7 @@ import { useState } from 'react';
 import moment from 'moment/moment';
 import BigNumber from 'bignumber.js';
 import { capitalize } from 'lodash';
-import { EyeIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 
 function App() {
   const size = 200;
@@ -66,7 +66,7 @@ const ActivityView = (props: { activity: Activity }) => {
   return (
     <div className="bg-white border p-2 rounded-xl flex flex-col gap-y-2">
       {/* Header */}
-      <div className="flex gap-x-2 pb-1 border-b text-gray-500">
+      <div className="flex gap-x-2 pb-1 border-b text-gray-500 text-xs">
         {/* Start time */}
         <p>{moment(activity.start).format('LLL')}</p>
 
@@ -100,14 +100,14 @@ const ActivityView = (props: { activity: Activity }) => {
       </div>
 
       <div className="pt-1 border-t mt-0 text-gray-500">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 text-xs">
           <FunnelIcon className="w-4 h-4" />
           <p>Total gas: {BigNumber(gas).toString(10)} ETH (${usdGas.toPrecision(2)})</p>
         </div>
-        <div className="flex items-center gap-1">
-          <EyeIcon className="w-4 h-4" />
-          <p>Tracked by EarnApp</p>
-        </div>
+        {/*<div className="flex items-center gap-1">*/}
+        {/*  <EyeIcon className="w-4 h-4" />*/}
+        {/*  <p>Tracked by EarnApp</p>*/}
+        {/*</div>*/}
 
       </div>
     </div>

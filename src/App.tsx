@@ -159,15 +159,18 @@ function SendView(props: { send: DebankSendToken }) {
       <img className="w-4 h-4 rounded-full" src={props.send.token.logoUrl ?? ''} alt={props.send.tokenId} /> :
       <ArrowUpCircleIcon className="w-5 h-5 stroke-red-600" />
     }
-    <div className="text-red-500">
-      -{props.send.amount.toPrecision(4)} {props.send.token.optimizedSymbol}
+    <div className="flex items-baseline gap-2">
+      <div  className="text-red-500">
+        -{props.send.amount.toPrecision(4)} {props.send.token.optimizedSymbol}
+      </div>
+
+      {
+        (props.send.token.name?.length ?? 0) > 5 &&
+        <div className="text-gray-300 italic text-xs line-clamp-4 text-clip ...">
+          {props.send.token.name?.slice(0, 50)}
+        </div>
+      }
     </div>
-
-    <div className="grow" />
-
-    {/*<div className='text-gray-400 text-xs'>*/}
-    {/*  {props.send.toAddr.slice(0, 6)}...{props.send.toAddr.slice(-4)}*/}
-    {/*</div>*/}
   </div>;
 }
 
@@ -185,8 +188,8 @@ function ReceiveView(props: { receive: DebankReceiveToken }) {
 
       {
         (props.receive.token.name?.length ?? 0) > 5 &&
-        <div className="text-gray-300 text-xs">
-          {props.receive.token.name}
+        <div className="text-gray-300 italic text-xs line-clamp-4 text-clip ...">
+          {props.receive.token.name?.slice(0, 50)}
         </div>
       }
     </div>
@@ -229,8 +232,14 @@ const ProjectActivityItemView = (props: { item: DebankHistoryItem }) => {
       <div className="border-l ml-4 mt-2 pl-2">
         <div className="flex">
           {item.name ?
-            <p className="text-sm text-gray-500">{capitalize(noCase(item.name))}</p> :
-            <p className="text-sm text-gray-500">Execute</p>
+            <>
+              <p className="text-sm text-gray-500">{capitalize(noCase(item.name))}</p>
+              {item.cex && <p className="text-sm text-gray-500 flex">
+                <img className="w-5 h-5" src={item.cex.logoUrl} />
+                ({item.cex.name} CEX)
+              </p>}
+            </> :
+            <p className="text-sm text-gray-500">Transfer</p>
           }
           <div className="grow" />
           <p className="text-sm italic text-gray-400">{trxAddress}</p>

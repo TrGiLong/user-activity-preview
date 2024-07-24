@@ -1,6 +1,6 @@
 import './App.css';
 import { useQuery } from 'react-query';
-import { Activity, DebankHistoryItem, DebankReceiveToken, DebankSendToken } from './model.ts';
+import { Activity, DebankHistoryItem, DebankReceiveToken, DebankSendToken, DebankTokenApprove } from './model.ts';
 import { useState } from 'react';
 import moment from 'moment/moment';
 import BigNumber from 'bignumber.js';
@@ -198,6 +198,28 @@ function ReceiveView(props: { receive: DebankReceiveToken }) {
   </div>;
 }
 
+function ApproveView(props: { approve: DebankTokenApprove }) {
+  return <div className="flex items-center gap-x-1">
+    {props.approve.token.logoUrl ?
+      <img className="w-4 h-4 rounded-full" src={props.approve.token.logoUrl ?? ''} alt={props.approve.tokenId} /> :
+      <ArrowDownCircleIcon className="w-5 h-5 stroke-green-600" />
+    }
+
+    <div className="flex items-baseline gap-2">
+      <div className="">
+        {props.approve.token.optimizedSymbol ?? props.approve.token.symbol}
+      </div>
+
+      {
+        (props.approve.token.name?.length ?? 0) > 5 &&
+        <div className="text-gray-300 italic text-xs line-clamp-4 text-clip ...">
+          {props.approve.token.name?.slice(0, 50)}
+        </div>
+      }
+    </div>
+  </div>;
+}
+
 
 // const RegularActivityItemView = (props: { item: DebankHistoryItem }) => {
 //   const { item } = props;
@@ -259,7 +281,7 @@ const ProjectActivityItemView = (props: { item: DebankHistoryItem }) => {
           ))
         }
 
-        {/*{item.debankTokenApproves.map(send => (<div>Approve {send.token.optimizedSymbol}</div>))}*/}
+        {item.debankTokenApproves.map(approve => <ApproveView key={approve.id} approve={approve} />)}
       </div>
     </div>
   );

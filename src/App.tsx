@@ -10,7 +10,7 @@ import { EyeIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 function App() {
   const size = 200;
 
-  const [page, setPage] = useState(0);
+  const [page] = useState(0);
 
   const { isLoading, error, data } = useQuery<Activity[]>('repoData', () =>
     fetch(`${import.meta.env.VITE_BACKEND}/activity?offset=${page * size}&limit=${size}`).then(res =>
@@ -171,18 +171,18 @@ function ReceiveView(props: { receive: DebankReceiveToken }) {
 }
 
 
-const RegularActivityItemView = (props: { item: DebankHistoryItem }) => {
-  const { item } = props;
-
-  return (
-    <div className="">
-      {capitalize(item.name.split(/(?=[A-Z])/).join(' '))}
-      {item.debankTokenSends.map(send => <SendView key={send.id} send={send} />)}
-      {item.debankTokenReceives.map(receive => (<ReceiveView key={receive.id} receive={receive} />))}
-      {item.debankTokenApproves.map(approve => (<div>{approve.token.optimizedSymbol}</div>))}
-    </div>
-  );
-};
+// const RegularActivityItemView = (props: { item: DebankHistoryItem }) => {
+//   const { item } = props;
+//
+//   return (
+//     <div className="">
+//       {capitalize(item.name.split(/(?=[A-Z])/).join(' '))}
+//       {item.debankTokenSends.map(send => <SendView key={send.id} send={send} />)}
+//       {item.debankTokenReceives.map(receive => (<ReceiveView key={receive.id} receive={receive} />))}
+//       {item.debankTokenApproves.map(approve => (<div>{approve.token.optimizedSymbol}</div>))}
+//     </div>
+//   );
+// };
 
 const ProjectActivityItemView = (props: { item: DebankHistoryItem }) => {
   const { item } = props;

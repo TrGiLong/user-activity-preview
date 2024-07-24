@@ -5,7 +5,8 @@ import { useState } from 'react';
 import moment from 'moment/moment';
 import BigNumber from 'bignumber.js';
 import { capitalize } from 'lodash';
-import { FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { ArrowDownCircleIcon, ArrowUpCircleIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { noCase } from 'change-case';
 
 function App() {
   const size = 200;
@@ -154,18 +155,40 @@ const ActivityItemGroupView = (props: { items: DebankHistoryItem[] }) => {
 
 function SendView(props: { send: DebankSendToken }) {
   return <div className="flex items-center gap-x-1">
-    <img className="w-4 h-4 rounded-full" src={props.send.token.logoUrl ?? ''} alt={props.send.tokenId} />
+    {props.send.token.logoUrl ?
+      <img className="w-4 h-4 rounded-full" src={props.send.token.logoUrl ?? ''} alt={props.send.tokenId} /> :
+      <ArrowUpCircleIcon className="w-5 h-5 stroke-red-600" />
+    }
     <div className="text-red-500">
       -{props.send.amount.toPrecision(4)} {props.send.token.optimizedSymbol}
     </div>
+
+    <div className="grow" />
+
+    {/*<div className='text-gray-400 text-xs'>*/}
+    {/*  {props.send.toAddr.slice(0, 6)}...{props.send.toAddr.slice(-4)}*/}
+    {/*</div>*/}
   </div>;
 }
 
 function ReceiveView(props: { receive: DebankReceiveToken }) {
   return <div className="flex items-center gap-x-1">
-    <img className="w-4 h-4 rounded-full" src={props.receive.token.logoUrl ?? ''} alt={props.receive.tokenId} />
-    <div className="text-green-500">
-      +{props.receive.amount.toPrecision(4)} {props.receive.token.optimizedSymbol}
+    {props.receive.token.logoUrl ?
+      <img className="w-4 h-4 rounded-full" src={props.receive.token.logoUrl ?? ''} alt={props.receive.tokenId} /> :
+      <ArrowDownCircleIcon className="w-5 h-5 stroke-green-600" />
+    }
+
+    <div className="flex items-baseline gap-2">
+      <div className="text-green-500">
+        +{props.receive.amount.toPrecision(4)} {props.receive.token.optimizedSymbol ?? props.receive.token.symbol}
+      </div>
+
+      {
+        (props.receive.token.name?.length ?? 0) > 5 &&
+        <div className="text-gray-300 text-xs">
+          {props.receive.token.name}
+        </div>
+      }
     </div>
   </div>;
 }
@@ -187,6 +210,9 @@ function ReceiveView(props: { receive: DebankReceiveToken }) {
 const ProjectActivityItemView = (props: { item: DebankHistoryItem }) => {
   const { item } = props;
 
+  const trxHash = item.id.split(':')[2];
+  const trxAddress = `${trxHash.slice(0, 6)}...${trxHash.slice(-4)}`;
+
   return (
     <div className="">
       {/*<div className="flex items-center gap-x-2">*/}
@@ -201,14 +227,27 @@ const ProjectActivityItemView = (props: { item: DebankHistoryItem }) => {
       {/*</div>*/}
 
       <div className="border-l ml-4 mt-2 pl-2">
-        <p className="text-sm text-gray-500">{capitalize(item.name.split(/(?=[A-Z])/).join(' '))}</p>
+        <div className="flex">
+          {item.name ?
+            <p className="text-sm text-gray-500">{capitalize(noCase(item.name))}</p> :
+            <p className="text-sm text-gray-500">Execute</p>
+          }
+          <div className="grow" />
+          <p className="text-sm italic text-gray-400">{trxAddress}</p>
+        </div>
 
-        {item.debankTokenSends.map(send => (
-          <SendView key={send.id} send={send} />
-        ))}
-        {item.debankTokenReceives.map(receive => (
-          <ReceiveView key={receive.id} receive={receive} />
-        ))}
+        {
+          item.debankTokenSends.map(send => (
+            <SendView key={send.id} send={send} />
+          ))
+        }
+
+        {
+          item.debankTokenReceives.map(receive => (
+            <ReceiveView key={receive.id} receive={receive} />
+          ))
+        }
+
         {/*{item.debankTokenApproves.map(send => (<div>Approve {send.token.optimizedSymbol}</div>))}*/}
       </div>
     </div>

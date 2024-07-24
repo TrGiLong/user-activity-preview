@@ -100,17 +100,19 @@ const ActivityView = (props: { activity: Activity }) => {
           })}
       </div>
 
-      <div className="pt-1 border-t mt-0 text-gray-500">
-        <div className="flex items-center gap-1 text-xs">
-          <FunnelIcon className="w-4 h-4" />
-          <p>Total gas: {BigNumber(gas).toString(10)} ETH (${usdGas.toPrecision(2)})</p>
-        </div>
-        {/*<div className="flex items-center gap-1">*/}
-        {/*  <EyeIcon className="w-4 h-4" />*/}
-        {/*  <p>Tracked by EarnApp</p>*/}
-        {/*</div>*/}
+      {gas === 0 &&
+        <div className="pt-1 border-t mt-0 text-gray-500">
+          <div className="flex items-center gap-1 text-xs">
+            <FunnelIcon className="w-4 h-4" />
+            <p>Total gas: {BigNumber(gas).toString(10)} ETH (${usdGas.toPrecision(2)})</p>
+          </div>
+          {/*<div className="flex items-center gap-1">*/}
+          {/*  <EyeIcon className="w-4 h-4" />*/}
+          {/*  <p>Tracked by EarnApp</p>*/}
+          {/*</div>*/}
 
-      </div>
+        </div>
+      }
     </div>
   );
 };
@@ -160,7 +162,7 @@ function SendView(props: { send: DebankSendToken }) {
       <ArrowUpCircleIcon className="w-5 h-5 stroke-red-600" />
     }
     <div className="flex items-baseline gap-2">
-      <div  className="text-red-500">
+      <div className="text-red-500">
         -{props.send.amount.toPrecision(4)} {props.send.token.optimizedSymbol}
       </div>
 
